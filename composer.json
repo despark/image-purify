@@ -1,0 +1,34 @@
+{
+    "name": "despark/image-purify",
+    "type": "library",
+    "description": "Image purifier - A ps/image-optimizer fork",
+    "keywords": ["image optimizer", "compression", "image", "optimization", "jpegoptim", "optipng", "mozjpeg"],
+    "minimum-stability": "stable",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ludmil Simeonov",
+            "email": "lsimeonov@desark.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Despark\\ImagePurify\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "classmap": [
+            "tests/TestCase.php"
+        ]
+    },
+    "require": {
+        "php": ">=7.0",
+        "symfony/process": "~3.0",
+        "symfony/options-resolver": "~3.0",
+        "psr/log": "1.0.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.0",
+        "mockery/mockery": "0.9.*"
+    }
+}
