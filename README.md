@@ -1,5 +1,5 @@
 <p align="center">
-[![Build Status](https://travis-ci.org/despark/image-purify.svg?branch=master)](https://travis-ci.org/despark/image-purify)
+<a href="https://travis-ci.org/despark/image-purify"><img src="https://travis-ci.org/despark/image-purify.svg" alt="Build Status"></a>
 </p>
 
 # To be done
