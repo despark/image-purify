@@ -34,7 +34,8 @@
     "scripts": {
         "test": [
             "@composer install",
-            "phpunit"
+            "@composer dumpautoload",
+            "vendor/bin/phpunit"
         ]
     }
 }
