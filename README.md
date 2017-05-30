@@ -14,7 +14,7 @@ Of you want to add more you can do so by using your own command.
 - [optipng](http://optipng.sourceforge.net/)
 - [giflossy](https://github.com/pornel/giflossy)*
 
-<em>\*Giflossy is a fork of [gifsicle](https://www.lcdf.org/gifsicle/) so you can use the main library by excluding the --lossy argument [(see options)](#options)</em>
+<em>\*Giflossy is a fork of [gifsicle](https://www.lcdf.org/gifsicle/) so you can use the main library by excluding the --lossy argument [(see options)](#Factory Options)</em>
 
 ## Exmple Usage
 Initialize the purifier with sensible defaults

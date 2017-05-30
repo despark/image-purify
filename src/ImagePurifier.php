@@ -6,12 +6,13 @@ namespace Despark\ImagePurify;
 
 use Despark\ImagePurify\Exceptions\PurifyException;
 use Despark\ImagePurify\Interfaces\HasChains;
+use Despark\ImagePurify\Interfaces\ImagePurifierInterface;
 use Despark\ImagePurify\Traits\PurifierChains;
 
 /**
  * Class ImagePurifier.
  */
-class ImagePurifier implements HasChains
+class ImagePurifier implements ImagePurifierInterface, HasChains
 {
     use PurifierChains;
 

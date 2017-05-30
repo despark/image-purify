@@ -2,7 +2,7 @@
     "name": "despark/image-purify",
     "type": "library",
     "description": "Image purifier - A ps/image-optimizer fork",
-    "keywords": ["image optimizer", "compression", "image", "optimization", "jpegoptim", "optipng", "mozjpeg"],
+    "keywords": ["image-optimizer", "compression", "image", "optimization", "optipng", "mozjpeg", "gifsicle", "pngquant", "giflossy"],
     "minimum-stability": "stable",
     "license": "MIT",
     "authors": [
