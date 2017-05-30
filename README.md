@@ -14,7 +14,7 @@ Of you want to add more you can do so by using your own command.
 - [optipng](http://optipng.sourceforge.net/)
 - [giflossy](https://github.com/pornel/giflossy)*
 
-<em>\*Giflossy is a fork of [gifsicle](https://www.lcdf.org/gifsicle/) so you can use the main library by excluding the --lossy argument [(see options)](#Factory Options)</em>
+<em>\*Giflossy is a fork of [gifsicle](https://www.lcdf.org/gifsicle/) so you can use the main library by excluding the --lossy argument [(see options)](#factory-options)</em>
 
 ## Exmple Usage
 Initialize the purifier with sensible defaults
@@ -52,6 +52,21 @@ This is an anatomy of an factory option
 
 #### Logger
 You can pass custom logger to the `ImagePurifierFactory` which must implement `Psr\Log\LoggerInterface`
+
+## Good to know
+Pngquant will exit with code `98` if the file was already optimized (at least this is what we experienced on tests).
+This is for you to handle if the errors are not suppressed. If this happens we throw CommandException with special code `98`
+*In general it is a good idea to make sure files are optimized only once.
+Example:
+```php
+try{
+    $purifier->purify($filePath);
+}catch(CommandException $e){
+    if($e->getCode() === 98){
+        // handle png quant already processed
+    }
+}
+```
 
 ## Advanced usage
 To be done

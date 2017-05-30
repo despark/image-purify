@@ -6,6 +6,7 @@ namespace Despark\ImagePurify\Commands;
 
 use Despark\ImagePurify\Exceptions\CommandException;
 use Despark\ImagePurify\Interfaces\CommandInterface;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
 
@@ -66,6 +67,8 @@ class Command implements CommandInterface
 
         try {
             $process->mustRun();
+        } catch (ProcessFailedException $e) {
+            throw new CommandException($e->getMessage(), $e->getProcess()->getExitCode());
         } catch (\Exception $e) {
             throw new CommandException($e->getMessage());
         }

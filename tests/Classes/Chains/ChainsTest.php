@@ -51,7 +51,6 @@ class ChainsTest extends TestCase
 
     /**
      * @group class
-     * @group debug
      */
     public function testPurifyFirstOnlyDisabled()
     {
