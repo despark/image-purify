@@ -5,33 +5,70 @@ namespace Despark\ImagePurify\Commands;
 
 
 use Despark\ImagePurify\Exceptions\CommandException;
+use Symfony\Component\Process\ExecutableFinder;
 
+/**
+ * Class MozJpeg.
+ */
 class MozJpeg extends Command
 {
 
     /**
-     * @return string
+     * @var string
+     */
+    protected $spongeBin;
+
+    /**
+     * @var ExecutableFinder
+     */
+    protected $execFinder;
+
+    /**
+     * Temporary output file.
+     * @var string
+     */
+    protected $outFileTemp;
+
+    /**
+     * @return void
      * @throws CommandException
      */
-    public function buildCommand()
+    public function execute()
     {
-        if (! $sponge = $this->getSpongeBin()) {
-            throw new CommandException('`sponge` is not found. You must install it with sudo apt-get install moreutils');
+        parent::execute();
+        if ($this->isOutSourceEqual()) // Now move the file if we successfully optimized
+        {
+            rename($this->outFileTemp, $this->getOutFile());
         }
-
-        // Build the command
-        $arguments = implode(' ', $this->getArguments());
-
-        return $this->getBin().' '.$arguments.' | '.$sponge.' '.$this->getOutFile();
     }
 
     /**
-     * @return string
-     * @codeCoverageIgnore
+     * Gets all the arguments
+     *
+     * @return array
      */
-    protected function getSpongeBin()
+    public function getArguments(): array
     {
-        return shell_exec('which sponge');
+        // We will need to process the arguments and merge them.
+        $arguments = parent::getArguments();
+
+        // If we have outfile setup don't act!
+        foreach ($arguments as $argument) {
+            if (strstr($argument, '-outfile') !== false) {
+                return $arguments;
+            }
+        }
+
+        if ($this->isOutSourceEqual()) // Check if not already specified
+        {
+            $this->outFileTemp = tempnam(sys_get_temp_dir(), 'img-prfy-');
+            $arguments[] = '-outfile '.escapeshellarg($this->outFileTemp);
+        } else {
+            $arguments[] = '-outfile '.escapeshellarg($this->getOutFile());
+        }
+
+        return $arguments;
     }
+
 
 }

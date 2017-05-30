@@ -44,6 +44,7 @@ class Command implements CommandInterface
      */
     protected $sourceFile;
 
+
     /**
      * Command constructor.
      * @param string $bin
@@ -53,6 +54,29 @@ class Command implements CommandInterface
     {
         $this->bin = $bin;
         $this->sourceFile = $sourceFile;
+    }
+
+    /**
+     * @return void
+     * @throws CommandException
+     */
+    public function execute()
+    {
+        $process = $this->getProcess($this->buildCommand());
+
+        try {
+            $process->mustRun();
+        } catch (\Exception $e) {
+            throw new CommandException($e->getMessage());
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function buildCommand(): string
+    {
+        return $this->getBin().' '.$this->buildArguments().' '.escapeshellarg($this->getSourceFile());
     }
 
     /**
@@ -113,30 +137,13 @@ class Command implements CommandInterface
         return $this->arguments[$index] ?? null;
     }
 
-    /**
-     * @return mixed
-     * @throws CommandException
-     */
-    public function execute()
-    {
-        $process = $this->getProcess($this->buildCommand());
-
-        try {
-            $process->mustRun();
-        } catch (\Exception $e) {
-            throw new CommandException($e->getMessage());
-        }
-    }
 
     /**
      * @return string
      */
-    public function buildCommand()
+    public function buildArguments()
     {
-        // Build the command
-        $arguments = implode(' ', $this->getArguments());
-
-        return $this->getBin().' '.$arguments.' 1> '.$this->getOutFile();
+        return implode(' ', $this->getArguments());
     }
 
     /**
@@ -146,7 +153,7 @@ class Command implements CommandInterface
     {
         if (! isset($this->actualBin)) {
             $this->bin = escapeshellcmd($this->bin);
-            $this->actualBin = (new ExecutableFinder())->find($this->bin, $this->bin);
+            $this->actualBin = (new ExecutableFinder())->find($this->bin, $this->bin, ['/usr/local/bin']);
             if (! is_executable($this->actualBin)) {
                 throw new CommandException('Binary '.$this->actualBin.' is not executable');
             }
@@ -204,5 +211,13 @@ class Command implements CommandInterface
         }
 
         return $this->outFile;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isOutSourceEqual(): bool
+    {
+        return $this->getSourceFile() === $this->getOutFile();
     }
 }

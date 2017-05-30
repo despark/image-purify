@@ -7,6 +7,7 @@ namespace Despark\Tests\ImagePurify;
 use Despark\ImagePurify\Interfaces\CommandInterface;
 use Mockery\Expectation;
 use PHPUnit_Framework_TestCase;
+use Symfony\Component\Process\Process;
 
 class TestCase extends PHPUnit_Framework_TestCase
 {
@@ -35,5 +36,13 @@ class TestCase extends PHPUnit_Framework_TestCase
     protected function mockCommand()
     {
         return \Mockery::mock(CommandInterface::class);
+    }
+
+    /**
+     * @return \Mockery\Mock|Process
+     */
+    public function getProcessMock()
+    {
+        return \Mockery::mock(Process::class, ['mustRun' => true])->shouldIgnoreMissing();
     }
 }

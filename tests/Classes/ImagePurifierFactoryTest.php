@@ -26,9 +26,11 @@ class ImagePurifierFactoryTest extends TestCase
 
         $purifier = $factory->create();
 
+        $this->assertFalse($purifier->suppressErrors());
+
         $chains = $purifier->getChains();
 
-        $this->assertCount(1, $chains);
+        $this->assertCount(3, $chains);
 
         $chain = reset($chains);
 
@@ -47,8 +49,8 @@ class ImagePurifierFactoryTest extends TestCase
      */
     public function testGetOptions()
     {
-        $factory = new ImagePurifierFactory(['chains' => []]);
-        $this->assertEquals(['chains' => []], $factory->getOptions());
+        $factory = new ImagePurifierFactory(['chains' => [], 'suppress_errors' => true]);
+        $this->assertEquals(['chains' => [], 'suppress_errors' => true], $factory->getOptions());
     }
 
     /**

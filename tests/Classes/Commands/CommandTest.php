@@ -37,7 +37,6 @@ class CommandTest extends TestCase
         $this->expectExceptionMessageRegExp('/Binary (\w+?) is not executable/');
         $class->getBin();
 
-
         $bin = realpath(__DIR__.'/../resources/test_bash.sh');
         $class = \Mockery::mock(Command::class, [$bin])->makePartial();
 
@@ -81,9 +80,8 @@ class CommandTest extends TestCase
 
         $this->mock->shouldReceive('getProcess')->andReturnUsing(function ($command) {
             $this->assertNotFalse(strstr($command, "test 'arg1'"));
-            $process = \Mockery::mock(Process::class, ['mustRun' => true])->shouldIgnoreMissing();
 
-            return $process;
+            return $this->getProcessMock();
         });
 
         $this->mock->execute();
@@ -139,12 +137,28 @@ class CommandTest extends TestCase
     {
         $class = new Command('test');
         $class->setSourceFile('testInFile');
-        $this->assertEquals('testInFile', $class->getOutFile());
-        $this->assertEquals('testInFile', $class->getSourceFile());
+        $this->assertEquals("testInFile", $class->getOutFile());
+        $this->assertEquals("testInFile", $class->getSourceFile());
 
         $class = new Command('test');
         $class->setOutFile('testOutFile');
-        $this->assertEquals('testOutFile', $class->getOutFile());
+        $this->assertEquals("testOutFile", $class->getOutFile());
+    }
+
+    /**
+     * @group class
+     */
+    public function testBuildCommand()
+    {
+        $this->mock->setOutFile('testOutFile.jpg');
+
+        $this->mock->shouldReceive('getBin')->andReturn('test');
+
+        $this->mock->setArguments(['arg1', 'arg2']);
+
+        $command = $this->mock->buildCommand();
+
+        $this->assertEquals("test 'arg1' 'arg2' 'testSourceFile.png'", $command);
     }
 
 }

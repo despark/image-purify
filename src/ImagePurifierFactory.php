@@ -4,9 +4,12 @@
 namespace Despark\ImagePurify;
 
 
+use Despark\ImagePurify\Chains\GifChain;
 use Despark\ImagePurify\Chains\JpegChain;
+use Despark\ImagePurify\Chains\PngChain;
 use Despark\ImagePurify\Commands\Command;
 use Despark\ImagePurify\Commands\MozJpeg;
+use Despark\ImagePurify\Commands\PngQuant;
 use Despark\ImagePurify\Exceptions\PurifyException;
 use Despark\ImagePurify\Interfaces\ChainInterface;
 use Despark\ImagePurify\Interfaces\CommandInterface;
@@ -55,18 +58,38 @@ class ImagePurifierFactory
                             'customClass' => MozJpeg::class,
                         ],
                     ],
+                    'first_only' => false,
                 ],
-//                PngChain::class => [
-//
-//                ],
-//                GifChain::class => [
-//
-//                ],
+                PngChain::class => [
+                    'commands' => [
+                        'pngQuant' => [
+                            'bin' => 'pngquant',
+                            'arguments' => ['-f', '--skip-if-larger', '--strip'],
+                            'customClass' => PngQuant::class,
+                        ],
+                        'optiPng' => [
+                            'bin' => 'optipng',
+                            'arguments' => ['-i0', '-o2', '-quiet'],
+
+                        ],
+                    ],
+                    'first_only' => false,
+                ],
+                GifChain::class => [
+                    'commands' => [
+                        'giflossy' => [
+                            'bin' => 'gifsicle',
+                            'arguments' => ['-b', '-O3', '--lossy=100', '--no-extensions'],
+                        ],
+                    ],
+                ],
             ],
+            'suppress_errors' => false,
         ]);
 
-        $resolver->setRequired('chains');
+        $resolver->setRequired(['chains', 'suppress_errors']);
         $resolver->setAllowedTypes('chains', ['array']);
+        $resolver->setAllowedTypes('suppress_errors', ['boolean']);
 
     }
 
@@ -76,6 +99,8 @@ class ImagePurifierFactory
     public function create(): ImagePurifier
     {
         $purifier = new ImagePurifier();
+
+        $purifier->setSuppressErrors($this->getOption('suppress_errors', false));
 
         $chainsOptions = $this->getOption('chains', []);
 
@@ -115,6 +140,10 @@ class ImagePurifierFactory
             /** @var ChainInterface $chain */
             $chain = new $chainClass($this->logger);
             $chain->setCommands($commands);
+
+            if (isset($properties['first_only']) && is_bool($properties['first_only'])) {
+                $chain->executeFirstOnly($properties['first_only']);
+            }
 
             $chains[] = $chain;
         }

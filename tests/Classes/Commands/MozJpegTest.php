@@ -5,41 +5,60 @@ namespace Despark\Tests\ImagePurify\Classes\Commands;
 
 
 use Despark\ImagePurify\Commands\MozJpeg;
-use Despark\ImagePurify\Exceptions\CommandException;
 use Despark\Tests\ImagePurify\TestCase;
 use Mockery\Mock;
+use phpmock\mockery\PHPMockery;
 
+/**
+ * Class MozJpegTest.
+ */
 class MozJpegTest extends TestCase
 {
 
     /**
-     *
+     * @var Mock|MozJpeg
      */
-    public function testBuildCommand()
+    protected $mock;
+
+    /**
+     * Set up test.
+     */
+    protected function setUp()
     {
-        /** @var Mock|MozJpeg $mock */
-        $mock = \Mockery::mock(MozJpeg::class, ['cjpeg', 'file.png'])
-                        ->shouldAllowMockingProtectedMethods()
-                        ->makePartial();
-
-        $mock->shouldReceive('getSpongeBin')->andReturn('sponge');
-        $mock->shouldReceive('getBin')->andReturn('cjpeg');
-
-        $mock->setArguments(['-optimize']);
-
-        $command = $mock->buildCommand();
-
-        $this->assertEquals("cjpeg '-optimize' | sponge file.png", $command);
-
-        // Test without sponge bin
-        $mock = \Mockery::mock(MozJpeg::class, ['cjpeg', 'file.png'])
-                        ->shouldAllowMockingProtectedMethods()
-                        ->makePartial();
-
-        $mock->shouldReceive('getSpongeBin')->andReturn('');
-
-        $this->expectException(CommandException::class);
-        $mock->buildCommand();
+        $this->mock = \Mockery::mock(MozJpeg::class, ['test', 'test.jpg'])->makePartial();
     }
+
+
+    /**
+     * @group jpeg
+     */
+    public function testExecute()
+    {
+        PHPMockery::mock('Despark\ImagePurify\Commands', "rename")->andReturn(true);
+
+        $processMock = $this->getProcessMock();
+
+        $this->mock->shouldReceive('getProcess')->andReturn($processMock);
+
+        $this->mock->execute();
+    }
+
+    /**
+     * @group jpeg
+     */
+    public function testGetArguments()
+    {
+        $this->mock->setArguments(['-outfile=test.jpg']);
+        $arguments = $this->mock->getArguments();
+        $expected = ["'-outfile=test.jpg'"];
+        $this->assertEquals($expected, $arguments);
+
+        $expected = ["-outfile 'other.jpeg'"];
+        $this->mock->setArguments([]);
+        $this->mock->setOutFile('other.jpeg');
+        $arguments = $this->mock->getArguments();
+        $this->assertEquals($expected, $arguments);
+    }
+
 
 }
