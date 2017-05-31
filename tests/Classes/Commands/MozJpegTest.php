@@ -35,6 +35,8 @@ class MozJpegTest extends TestCase
     public function testExecute()
     {
         PHPMockery::mock('Despark\ImagePurify\Commands', "rename")->andReturn(true);
+        PHPMockery::mock('Despark\ImagePurify\Commands', "fileperms")->andReturn(0644);
+        PHPMockery::mock('Despark\ImagePurify\Commands', "chmod")->andReturn(true);
 
         $processMock = $this->getProcessMock();
 

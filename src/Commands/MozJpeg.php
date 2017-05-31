@@ -35,10 +35,16 @@ class MozJpeg extends Command
      */
     public function execute()
     {
+        // Get the permissions on the source file and keep them, as we faced problems with permission changes?!
+        if ($this->isOutSourceEqual()) {
+            $originalPermissions = fileperms($this->getSourceFile());
+        }
+
         parent::execute();
         if ($this->isOutSourceEqual()) // Now move the file if we successfully optimized
         {
             rename($this->outFileTemp, $this->getOutFile());
+            chmod($this->getOutFile(), $originalPermissions);
         }
     }
 
