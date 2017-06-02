@@ -1,5 +1,7 @@
 <p align="center">
 <a href="https://travis-ci.org/despark/image-purify"><img src="https://travis-ci.org/despark/image-purify.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/despark/image-purify"><img src="https://poser.pugx.org/despark/image-purify/v/stable" alt="Latest Stable Version" style="max-width:100%;"></a>
+<a href="https://packagist.org/packages/despark/image-purify"><img src="https://poser.pugx.org/despark/image-purify/downloads" alt="Total Downloads" style="max-width:100%;"></a>
 </p>
 
 ## About Image Purifier
