@@ -52,7 +52,7 @@ abstract class ChainAbstract implements ChainInterface
                     $command->setSourceFile($filePath);
                 }
                 if (method_exists($command, 'buildCommand')) {
-                    \Log::info('Purifier executing: '.$command->buildCommand());
+                    $this->getLogger()->info('Purifier executing: '.$command->buildCommand());
                 }
                 $command->execute();
                 if ($this->isExecuteFirstOnly()) {

@@ -26,7 +26,8 @@ class TestCase extends PHPUnit_Framework_TestCase
                     ->shouldReceive('execute')
                     ->once()
                     ->shouldReceive('setSourceFile')
-                    ->once();
+                    ->once()
+                    ->shouldReceive('buildCommand')->andReturn('test');
     }
 
 

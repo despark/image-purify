@@ -10,6 +10,7 @@ use Despark\ImagePurify\Chains\JpegChain;
 use Despark\ImagePurify\Chains\PngChain;
 use Despark\Tests\ImagePurify\TestCase;
 use Mockery\Mock;
+use phpmock\mockery\PHPMockery;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -55,6 +56,7 @@ class ChainsTest extends TestCase
     public function testPurifyFirstOnlyDisabled()
     {
         $this->mock->shouldReceive('canHandle')->andReturn(true);
+        PHPMockery::mock('Despark\ImagePurify\Chains', "method_exists")->andReturn(true);
         /*
          * test default first only
          */

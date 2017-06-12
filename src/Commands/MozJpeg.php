@@ -43,6 +43,13 @@ class MozJpeg extends Command
         parent::execute();
         if ($this->isOutSourceEqual()) // Now move the file if we successfully optimized
         {
+            if (! file_exists($this->outFileTemp)) {
+                throw new CommandException('Cannot find compressed file.');
+            }
+            // Check if outfile exists and has size
+            if (! filesize($this->outFileTemp)) {
+                throw new CommandException('Compressed file is 0 bytes');
+            }
             rename($this->outFileTemp, $this->getOutFile());
             chmod($this->getOutFile(), $originalPermissions);
         }
