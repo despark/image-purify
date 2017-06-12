@@ -51,6 +51,9 @@ abstract class ChainAbstract implements ChainInterface
                 if ($command instanceof CommandInterface) {
                     $command->setSourceFile($filePath);
                 }
+                if (method_exists($command, 'buildCommand')) {
+                    \Log::info('Purifier executing: '.$command->buildCommand());
+                }
                 $command->execute();
                 if ($this->isExecuteFirstOnly()) {
                     break;
